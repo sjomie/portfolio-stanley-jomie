@@ -1,0 +1,75 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html { scroll-behavior: smooth; -webkit-font-smoothing: antialiased; }
+  body { @apply bg-ink text-ivory font-sans; overflow-x: hidden; }
+  section[id] { scroll-margin-top: 72px; }
+  ::selection { background: rgba(62, 139, 255, 0.35); color: #fff; }
+  :focus-visible { outline: 1px solid #3E8BFF; outline-offset: 4px; }
+}
+
+@layer components {
+  .container-x { @apply mx-auto w-full max-w-[1320px] px-5 sm:px-8 lg:px-12; }
+  .eyebrow { @apply font-mono text-[11px] uppercase tracking-widest2 text-silver; }
+  .hairline { @apply h-px w-full bg-gradient-to-r from-transparent via-white/15 to-transparent; }
+  .btn {
+    @apply inline-flex items-center gap-3 px-6 py-3.5 text-[13px] font-medium uppercase tracking-[0.18em] transition-all duration-500;
+  }
+  .btn-primary { @apply btn bg-ivory text-navy-950 hover:bg-white hover:shadow-[0_0_40px_-6px_rgba(62,139,255,0.6)]; }
+  .btn-ghost { @apply btn border border-white/20 text-ivory hover:border-electric hover:text-white hover:bg-electric/5; }
+  .card { @apply border border-white/[0.07] bg-gradient-to-b from-navy-800/40 to-navy-900/20 backdrop-blur-sm; }
+  .chip { @apply inline-flex items-center border border-white/10 bg-white/[0.03] px-3 py-1.5 font-mono text-[11px] tracking-wider text-silver; }
+}
+
+/* Grain subtil pour casser l'aspect numérique des dégradés */
+.grain::after {
+  content: '';
+  position: absolute; inset: 0; pointer-events: none; opacity: 0.06; mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+/* Fondu de la photo dans la composition (photos non détourées) :
+   bords gauche/droit, bas et haut fondus pour éviter toute arête visible. */
+.portrait-mask {
+  -webkit-mask-image:
+    linear-gradient(to right, transparent 0%, #000 32%, #000 82%, transparent 100%),
+    linear-gradient(to bottom, transparent 0%, #000 12%, #000 62%, transparent 96%);
+  -webkit-mask-composite: source-in;
+  mask-image:
+    linear-gradient(to right, transparent 0%, #000 32%, #000 82%, transparent 100%),
+    linear-gradient(to bottom, transparent 0%, #000 12%, #000 62%, transparent 96%);
+  mask-composite: intersect;
+}
+@media (max-width: 767px) {
+  .portrait-mask {
+    -webkit-mask-image:
+      linear-gradient(to right, transparent 0%, #000 18%, #000 82%, transparent 100%),
+      linear-gradient(to bottom, #000 0%, #000 55%, transparent 98%);
+    mask-image:
+      linear-gradient(to right, transparent 0%, #000 18%, #000 82%, transparent 100%),
+      linear-gradient(to bottom, #000 0%, #000 55%, transparent 98%);
+  }
+}
+.portrait-mask-cutout {
+  -webkit-mask-image: linear-gradient(to bottom, #000 52%, transparent 74%);
+  mask-image: linear-gradient(to bottom, #000 52%, transparent 74%);
+}
+@media (max-width: 767px) {
+  .portrait-mask-cutout {
+    -webkit-mask-image: linear-gradient(to bottom, #000 38%, transparent 60%);
+    mask-image: linear-gradient(to bottom, #000 38%, transparent 60%);
+  }
+}
+
+.text-outline { color: transparent; -webkit-text-stroke: 1px rgba(241, 237, 228, 0.09); }
+
+@keyframes dash { to { stroke-dashoffset: 0; } }
+@keyframes blink { 0%, 100% { opacity: 1 } 50% { opacity: .25 } }
+.blink { animation: blink 2.4s ease-in-out infinite; }
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  .blink { animation: none; }
+}
